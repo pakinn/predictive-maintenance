@@ -1,4 +1,4 @@
-# Predictive Maintenance — Vibration Analysis Pipeline (Sol1)
+# Predictive Maintenance — Vibration Analysis Pipeline
 
 ระบบวิเคราะห์สัญญาณ Vibration เพื่อทำนายสภาพเครื่องจักรล่วงหน้า โดยใช้ Signal Processing + Machine Learning ตรวจจับความผิดปกติ (Anomaly Detection) จาก raw waveform ที่ได้จากเซ็นเซอร์วัดแรงสั่นสะเทือน
 
@@ -54,14 +54,14 @@ pip install numpy pandas matplotlib scikit-learn PyWavelets scipy
 python analyze.py
 ```
 
-> ⚠️ ข้อมูล Raw `.txt` ต้องอยู่ที่ `../Data/` (โฟลเดอร์ `Data` ถัดจาก `Sol1`)
+> ⚠️ ข้อมูล Raw `.txt` ต้องอยู่ที่ `../Data/` (โฟลเดอร์ `Data` ถัดจาก `Vibration Analysis Pipeline`)
 
 ---
 
 ## โครงสร้างไฟล์
 
 ```
-Sol1/
+Vibration Analysis Pipeline/
 ├── analyze.py              # 🚀 Main script — รันตรงนี้
 ├── ai_anomaly.py           # One-Class SVM anomaly detection
 ├── feature_engineering.py  # สกัด Wavelet / Envelope / Stat features
