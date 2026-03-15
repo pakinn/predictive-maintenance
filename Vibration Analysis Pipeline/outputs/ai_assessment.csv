@@ -1,0 +1,10 @@
+asset_id,analysis_date,file,model_name,anomaly_score_0_100,anomaly_flag,top_ai_driver,top_ai_driver_zscore
+compressor_ch06_naa,2024-10-16,A_CH-06 A_NAA_1490__Oct24.txt,OneClassSVM,100.0,Anomaly,crest_factor,1.766
+compressor_ch06_naa,2024-06-28,A_CH-06 A_NAA_1490__Jun24.txt,OneClassSVM,87.36,Anomaly,env_dom_freq_hz,2.502
+compressor_ch06_naa,2024-09-04,A_CH-06 A_NAA_1490__Sep24.txt,OneClassSVM,75.34,Anomaly,env_kurtosis,2.008
+cooling_pump_oah02_m1h,2024-09-04,A_Cooling Pump OAH 02_M1H_1480_Sep24.txt,OneClassSVM,69.8,Anomaly,wavelet_energy_L2,2.82
+jockey_pump_m1a,2024-06-28,A_Jockey pump_M1A_2925__Jun24.txt,OneClassSVM,46.98,Normal,wavelet_energy_L1,2.397
+jockey_pump_m1a,2024-09-04,A_Jockey pump_M1A_2925__Sep24.txt,OneClassSVM,46.98,Normal,skewness,1.203
+cooling_pump_oah02_m1h,2024-10-16,A_Cooling Pump OAH 02_M1H_1480_Oct24.txt,OneClassSVM,17.91,Normal,zero_cross_rate,1.644
+jockey_pump_m2a,2024-10-16,A_Jockey pump_M1A_2925__Oct24.txt,OneClassSVM,8.32,Normal,skewness,2.548
+cooling_pump_oah02_m1h,2024-06-28,A_Cooling Pump OAH 02_M1H_1480_Jun24.txt,OneClassSVM,0.0,Normal,zero_cross_rate,1.646
