@@ -20,6 +20,25 @@ ENVELOPE_FEATURE_NAMES = [
     'env_rms', 'env_peak', 'env_dom_freq_hz', 'env_kurtosis', 'env_crest_factor',
 ]
 
+ISO_ZONE_B = 2.3   # mm/s
+ISO_ZONE_C = 4.5
+ISO_ZONE_D = 7.1
+
+ISO_GROUP = {
+    'compressor_ch06_naa':   {'zone_b': 2.3, 'zone_c': 4.5, 'zone_d': 7.1},
+    'cooling_pump_oah02_m1h': {'zone_b': 2.3, 'zone_c': 4.5, 'zone_d': 7.1},
+    'jockey_pump_m1a':        {'zone_b': 2.3, 'zone_c': 4.5, 'zone_d': 7.1},
+    'jockey_pump_m2a':        {'zone_b': 2.3, 'zone_c': 4.5, 'zone_d': 7.1},
+}
+
+ISO_ZONE_COLORS = {
+    'A': '#4CAF50',   
+    'B': '#2196F3',   
+    'C': '#FF9800',   
+    'D': '#E53935',   
+    'Unknown': '#9E9E9E',
+}
+
 def get_wavelet_feature_names(level: int = WAVELET_LEVEL) -> list[str]:
     names = []
     for i in range(level + 1):

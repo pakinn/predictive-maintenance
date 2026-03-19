@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import OneClassSVM
+from config import ISO_ZONE_COLORS
 
 from config import (
     SVM_NU, SVM_KERNEL, SVM_GAMMA,
@@ -54,6 +55,7 @@ def build_ai_assessment(features: pd.DataFrame) -> pd.DataFrame:
 
 # Plots
 def save_ai_plots(features: pd.DataFrame, ai_assessment: pd.DataFrame,
+                  iso_assessment: pd.DataFrame,
                   plot_dir: str | Path) -> None:
     plot_dir = Path(plot_dir)
     plot_dir.mkdir(parents=True, exist_ok=True)
@@ -73,23 +75,21 @@ def save_ai_plots(features: pd.DataFrame, ai_assessment: pd.DataFrame,
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 5))
 
     # PCA
-    for flag in ['Normal', 'Anomaly']:
-        mask = merged['anomaly_flag'] == flag
-        ax1.scatter(pts[mask, 0], pts[mask, 1],
-                    marker=markers[flag], color=colors[flag],
-                    s=90, label=flag, zorder=3)
     for i, row in merged.iterrows():
-        lbl = f"{row['asset_id']}\n{str(row['analysis_date'])[:10]}"
-        ax1.annotate(lbl, (pts[i, 0], pts[i, 1]),
-                     fontsize=7, alpha=0.8,
-                     xytext=(4, 4), textcoords='offset points')
+        zone = row.get('iso_zone', 'Unknown')
+        flag = row['anomaly_flag']
+        ax1.scatter(pts[i, 0], pts[i, 1],
+                    marker=markers[flag],
+                    color=ISO_ZONE_COLORS.get(zone, '#888'),
+                    s=90, zorder=3)
     ax1.set_title('One-Class SVM — PCA projection')
     ax1.set_xlabel('PC1'); ax1.set_ylabel('PC2')
     ax1.legend()
 
     # Score bar
     sp = merged.sort_values('anomaly_score_0_100', ascending=False).reset_index(drop=True)
-    bar_colors = [colors.get(f, '#888') for f in sp['anomaly_flag']]
+    sp = sp.merge(iso_assessment[['file', 'iso_zone']], on='file', how='left')
+    bar_colors = [ISO_ZONE_COLORS.get(z, '#888') for z in sp['iso_zone']]
     xlabels    = [f"{a}\n{str(d)[:10]}"
                   for a, d in zip(sp['asset_id'], sp['analysis_date'])]
     ax2.bar(range(len(sp)), sp['anomaly_score_0_100'],
@@ -108,7 +108,7 @@ def save_ai_plots(features: pd.DataFrame, ai_assessment: pd.DataFrame,
 
     fig, ax = plt.subplots(figsize=(10, 5))
     bars = ax.barh(range(len(sp)), sp['anomaly_score_0_100'],
-                   color=[colors.get(f, '#888') for f in sp['anomaly_flag']])
+                color=[ISO_ZONE_COLORS.get(z, '#888') for z in sp['iso_zone']])
     for i, (_, row) in enumerate(sp.iterrows()):
         ax.text(row['anomaly_score_0_100'] + 0.8, i,
                 f"driver: {row['top_ai_driver']}",

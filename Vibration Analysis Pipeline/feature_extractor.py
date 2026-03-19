@@ -5,9 +5,19 @@ import numpy as np
 import pandas as pd
 import pywt
 from scipy.signal import hilbert
+from scipy.integrate import cumulative_trapezoid
+from scipy.integrate import cumulative_trapezoid
 
 from data_parser import parse_waveform_txt
 from config import WAVELET, WAVELET_LEVEL
+
+def accel_to_velocity_rms(amp_g: np.ndarray, fs_hz: float) -> float:
+    amp_ms2 = amp_g * 9.81
+    dt = 1.0 / fs_hz
+    velocity = cumulative_trapezoid(amp_ms2, dx=dt, initial=0)
+    velocity -= velocity.mean()
+    rms_ms = float(np.sqrt(np.mean(velocity ** 2)))
+    return rms_ms * 1000
 
 def extract_wavelet_features(amp: np.ndarray, wavelet: str = WAVELET,
                               level: int = WAVELET_LEVEL) -> dict:
@@ -48,22 +58,23 @@ def extract_stat_features(amp: np.ndarray, fs_hz: float) -> dict:
     std       = float(amp.std(ddof=0))
     centered  = amp - amp.mean()
 
-    shape_factor   = rms / (abs_mean + 1e-12)         # RMS / |mean|
-    impulse_factor = peak / (abs_mean + 1e-12)        # peak / |mean|
+    shape_factor   = rms / (abs_mean + 1e-12)
+    impulse_factor = peak / (abs_mean + 1e-12)
     skewness       = float((centered ** 3).mean() / (std ** 3 + 1e-12))
     kurtosis       = float((centered ** 4).mean() / (std ** 4 + 1e-12))
     crest_factor   = peak / (rms + 1e-12)
     zero_cross     = float(np.mean(np.diff(np.signbit(amp)) != 0))
 
     return {
-        'rms_g':          rms,
-        'peak_abs_g':     peak,
-        'crest_factor':   crest_factor,
-        'kurtosis':       kurtosis,
-        'skewness':       skewness,
-        'shape_factor':   shape_factor,
-        'impulse_factor': impulse_factor,
-        'zero_cross_rate': zero_cross,
+        'rms_g':            rms,
+        'peak_abs_g':       peak,
+        'crest_factor':     crest_factor,
+        'kurtosis':         kurtosis,
+        'skewness':         skewness,
+        'shape_factor':     shape_factor,
+        'impulse_factor':   impulse_factor,
+        'zero_cross_rate':  zero_cross,
+        'velocity_rms_mms': accel_to_velocity_rms(amp, fs_hz),  # เพิ่มบรรทัดนี้
     }
 
 def extract_all_features(df: pd.DataFrame) -> dict:
